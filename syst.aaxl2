@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<aadl2:Package xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aadl2="http://aadl.info/AADL/2.0" name="syst" publicSection="#//@ownedPublicSection">
+  <ownedPublicSection>
+    <ownedClassifier xsi:type="aadl2:SystemType" name="securitysystem"/>
+    <ownedClassifier xsi:type="aadl2:SystemImplementation" name="securitysystem.with_Devices">
+      <ownedRealization implemented="#//@ownedPublicSection/@ownedClassifier.0"/>
+      <ownedDeviceSubcomponent name="this_motion_sensor" deviceSubcomponentType="#//@ownedPublicSection/@ownedClassifier.4"/>
+      <ownedDeviceSubcomponent name="this_alarmsenso" deviceSubcomponentType="#//@ownedPublicSection/@ownedClassifier.6"/>
+      <ownedDeviceSubcomponent name="this_camera" deviceSubcomponentType="#//@ownedPublicSection/@ownedClassifier.8"/>
+      <ownedDeviceSubcomponent name="this_Alarmunit" deviceSubcomponentType="#//@ownedPublicSection/@ownedClassifier.10"/>
+      <ownedProcessSubcomponent name="this_Controller" processSubcomponentType="#//@ownedPublicSection/@ownedClassifier.2"/>
+    </ownedClassifier>
+    <ownedClassifier xsi:type="aadl2:ProcessType" name="Controller">
+      <ownedDataPort name="video_from_camera" in="true"/>
+      <ownedEventPort name="motions_in" in="true"/>
+      <ownedEventPort name="alarmsenso_in" in="true"/>
+      <ownedEventPort name="camera_out" out="true"/>
+      <ownedEventPort name="alarm_out" out="true"/>
+    </ownedClassifier>
+    <ownedClassifier xsi:type="aadl2:ProcessImplementation" name="Controller.with_threads">
+      <ownedRealization implemented="#//@ownedPublicSection/@ownedClassifier.2"/>
+    </ownedClassifier>
+    <ownedClassifier xsi:type="aadl2:DeviceType" name="motionsensor">
+      <ownedEventPort name="motion_detected" out="true"/>
+    </ownedClassifier>
+    <ownedClassifier xsi:type="aadl2:DeviceImplementation" name="motionsensor.impl">
+      <ownedRealization implemented="#//@ownedPublicSection/@ownedClassifier.4"/>
+    </ownedClassifier>
+    <ownedClassifier xsi:type="aadl2:DeviceType" name="alarmsenso">
+      <ownedEventPort name="Alarm_set_off" out="true"/>
+    </ownedClassifier>
+    <ownedClassifier xsi:type="aadl2:DeviceImplementation" name="alarmsenso.impl">
+      <ownedRealization implemented="#//@ownedPublicSection/@ownedClassifier.6"/>
+    </ownedClassifier>
+    <ownedClassifier xsi:type="aadl2:DeviceType" name="camera">
+      <ownedDataPort name="video_stream" out="true"/>
+      <ownedEventPort name="camera_on_off" in="true"/>
+    </ownedClassifier>
+    <ownedClassifier xsi:type="aadl2:DeviceImplementation" name="camera.impl">
+      <ownedRealization implemented="#//@ownedPublicSection/@ownedClassifier.8"/>
+    </ownedClassifier>
+    <ownedClassifier xsi:type="aadl2:DeviceType" name="Alarmunit">
+      <ownedEventPort name="alarm_on_off" in="true"/>
+    </ownedClassifier>
+    <ownedClassifier xsi:type="aadl2:DeviceImplementation" name="Alarmunit.impl">
+      <ownedRealization implemented="#//@ownedPublicSection/@ownedClassifier.10"/>
+    </ownedClassifier>
+  </ownedPublicSection>
+</aadl2:Package>
