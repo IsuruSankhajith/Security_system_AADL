@@ -18,7 +18,6 @@ public
 			camera_conn_out: port this_Controller.camera_out -> this_camera.camera_on_off;
 			alarm_conn_out: port this_Controller.alarm_out -> this_Alarmunit.alarm_on_off;
 			camera_conn_in: port this_camera.video_stream -> this_Controller.video_from_camera;
-			
 			bus_motion: bus access this_bus-> this_motion_sensor.bus_access;
 			bus_alarmsenso: bus access this_bus-> this_alarmsenso.bus_access;
 			bus_camera: bus access this_bus-> this_camera.bus_access;
@@ -34,6 +33,10 @@ public
 			camera_out: out event port;
 			alarm_out: out event port;
 			video_from_camera: in data port;
+			
+		--flows
+			--ControlRules_path1: flow path motion_in -> smartphone_out;
+			--ControlRules_path2: flow path motion_in -> warning_out;
 	end Controller;
 	
 	process implementation Controller.with_threads
@@ -56,6 +59,12 @@ public
 		features 	 
 			motion_in: in event port;
 			motion_out: out event port;
+		flows
+			ReadMotion_path1: flow path motion_in -> motion_out;
+		properties
+			dispatch_Protocol => Periodic;
+			Compute_Execution_Time => 3ms .. 5 ms;
+			Priority => 4;
 	end ReadMotion;
 		
 	thread implementation ReadMotion.impl
@@ -76,6 +85,17 @@ public
 			alarmsenso_in: in event port;
 			camera_out: out event port;
 			alarm_out: out event port;
+			smartphone_out: out event port;
+			warning_out: out event port; 
+		--flows
+			--ControlRules_path1: flow path motion_in -> smartphone_out;
+			--ControlRules_path2: flow path motion_in -> warning_out;
+		properties 
+			dispatch_Protocol => Periodic;
+			Compute_Execution_Time => 3ms .. 5 ms;
+			Period => 50 ms;
+			Priority => 4;
+			
 	end ControlRules;
 	
 	thread implementation ControlRules.impl
@@ -84,11 +104,14 @@ public
 	thread ProcessVideo
 		features
 			video_in: in data port;
+		properties 
+			dispatch_Protocol => Periodic;
+			Compute_Execution_Time => 3ms .. 5 ms;
+			Priority => 4;
 	end ProcessVideo;
 	
 	thread implementation ProcessVideo.impl
 	end ProcessVideo.impl;
-	
 	
 	processor mainProcessor
 			features 
@@ -98,6 +121,9 @@ public
 	processor implementation mainProcessor.impl
 		subcomponents
 			this_ram:memory Ram;
+		properties
+			Preemptive_Scheduler => true;
+			Scheduler_Quantum =>2ms;
 	end mainProcessor.impl;
 	
 	memory Ram
@@ -113,6 +139,8 @@ public
 		features 
 			motion_detected: out event port;
 			bus_access: requires bus access HWConnection;
+		flows
+			MotionTrackingSensor_Source: flow source motion_detected;
 	end motionsensor;
 	
 	device implementation motionsensor.impl
@@ -146,7 +174,5 @@ public
 	device implementation Alarmunit.impl
 	end Alarmunit.impl;
 	
-	
-	
-	
+		
 end syst;
